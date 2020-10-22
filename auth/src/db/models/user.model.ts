@@ -1,11 +1,13 @@
 import {
   Column,
   CreateDateColumn,
+  Entity,
   Index,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+@Entity()
 export class User {
   @PrimaryColumn()
   userId: number;
