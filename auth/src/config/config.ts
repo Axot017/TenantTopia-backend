@@ -13,7 +13,7 @@ export default (): any => ({
     transport: Transport.RMQ,
     options: {
       urls: [process.env.RABBITMQ_URL || 'amqp://localhost:5672'],
-      queue: process.env.RABBITMQ_QUEUE || 'core_queue',
+      queue: 'core_queue',
     },
   },
 });
