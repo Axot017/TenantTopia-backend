@@ -14,5 +14,5 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
     },
   });
   app.startAllMicroservicesAsync();
-  await app.listen(3333);
+  await app.listen(3334);
 })();

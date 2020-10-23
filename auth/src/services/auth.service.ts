@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -26,8 +27,12 @@ export class AuthService {
       },
     });
 
-    if (!user?.isConfirmed) {
+    if (!user) {
       throw new UnauthorizedException('Invalid user or password');
+    }
+
+    if (!user.isConfirmed) {
+      throw new BadRequestException('User not confirmed');
     }
 
     if (!compareSync(loginDto.password, user.password)) {

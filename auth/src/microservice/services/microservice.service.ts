@@ -36,7 +36,7 @@ export class MicroserviceService {
     }
 
     return this.coreClient
-      .send({ cmd: 'getUserById' }, userId)
+      .send({ cmd: 'getAccountById' }, userId)
       .pipe(
         timeout(5000),
         catchError((e) => {
@@ -51,7 +51,7 @@ export class MicroserviceService {
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const hashedPassword = await hash(createUserDto.email, 10);
+    const hashedPassword = await hash(createUserDto.password, 10);
     const user: User = {
       userId: createUserDto.userId,
       email: createUserDto.email,

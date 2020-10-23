@@ -4,6 +4,7 @@ export class RefreshTokenDto {
   @IsNotEmpty()
   @IsJWT()
   refreshToken: string;
+
   @IsNotEmpty()
   clientSecret: string;
 }
