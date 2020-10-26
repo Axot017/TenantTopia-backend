@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   CreateDateColumn,
@@ -9,22 +10,28 @@ import {
 
 @Entity()
 export class Account {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty()
   @Index()
   @Column()
   email: string;
 
+  @ApiProperty()
   @Column({ nullable: true })
   firstName: string;
 
+  @ApiProperty()
   @Column({ nullable: true })
   lastName: string;
 
+  @ApiProperty()
   @Column({ nullable: true })
   phoneNo: string;
 
+  @ApiProperty()
   @Column({ nullable: true })
   avatarUrl: string;
 

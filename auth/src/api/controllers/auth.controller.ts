@@ -1,4 +1,5 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { ApiResponse } from '@nestjs/swagger';
 import { AuthResponseDto } from '../../dtos/authResponse.dto';
 import { LoginDto } from '../../dtos/login.dto';
 import { RefreshTokenDto } from '../../dtos/refreshToken.dto';
@@ -9,12 +10,14 @@ import { ClientSecretGuard } from '../guards/clientSecret.guard';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @ApiResponse({ type: AuthResponseDto, status: 200 })
   @UseGuards(ClientSecretGuard)
   @Post('login')
   login(@Body() loginDto: LoginDto): Promise<AuthResponseDto> {
     return this.authService.login(loginDto);
   }
 
+  @ApiResponse({ type: AuthResponseDto, status: 200 })
   @UseGuards(ClientSecretGuard)
   @Post('refresh')
   refreshToken(

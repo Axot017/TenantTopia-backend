@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 (async () => {
   const app = await NestFactory.create(AppModule);
@@ -14,5 +15,14 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
     },
   });
   app.startAllMicroservicesAsync();
-  await app.listen(3335);
+
+  const options = new DocumentBuilder()
+    .setTitle('Tenant Topia - Core')
+    .setVersion('1.0')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('api', app, document);
+
+  await app.listen(parseInt(process.env.PORT) || 3000);
 })();

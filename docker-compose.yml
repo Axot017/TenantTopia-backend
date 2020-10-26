@@ -1,0 +1,56 @@
+version: "3.7"
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=Test123
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=core_db
+    ports:
+      - 5433:5432
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+  rabbitmq:
+    image: rabbitmq:3.7-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    volumes:
+      - ./rabbitmqdata:/var/lib/rabbitmq
+    ports:
+      - 15672:15672
+      - 5673:5672
+  auth-service:
+    build: "./auth"
+    volumes:
+      - ./auth:/home/node/app
+    ports:
+      - 3100:3333
+    depends_on:
+      - db
+      - rabbitmq
+    environment:
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=Test123
+      - DB_DATABASE=auth_db
+      - DB_HOST=db
+      - DB_PORT=5432
+      - PORT=3333
+      - "RABBITMQ_URL=amqp://rabbitmq:5672"
+  core-service:
+    build: "./core"
+    volumes:
+      - ./core:/home/node/app
+    ports:
+      - 3200:3333
+    depends_on:
+      - db
+      - rabbitmq
+    environment:
+      - DB_USERNAME=postgres
+      - DB_PASSWORD=Test123
+      - DB_HOST=db
+      - DB_DATABASE=core_db
+      - DB_PORT=5432
+      - PORT=3333
+      - "RABBITMQ_URL=amqp://rabbitmq:5672"
