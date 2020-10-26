@@ -8,7 +8,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_DB=core_db
     ports:
-      - 5433:5432
+      - 5432:5432
     volumes:
       - ./pgdata:/var/lib/postgresql/data
   rabbitmq:
@@ -19,7 +19,7 @@ services:
       - ./rabbitmqdata:/var/lib/rabbitmq
     ports:
       - 15672:15672
-      - 5673:5672
+      - 5672:5672
   auth-service:
     build: "./auth"
     volumes:
