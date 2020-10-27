@@ -1,0 +1,58 @@
+global-variables:
+  image: &docker-compose-image tmaier/docker-compose:latest
+  volumes: &docker-compose-volumes
+    - name: hosts
+      path: /etc/hosts
+    - name: dockersock
+      path: /var/run
+
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: deploy backend
+    image: *docker-compose-image
+    volumes: *docker-compose-volumes
+    pull: if-not-exists
+    environment:
+      SSH_PRIVATE_KEY:
+        from_secret: SSH_PRIVATE_KEY
+    commands:
+      - "which ssh-agent || ( apk add --no-cache openssh-client )"
+      - "which rsync || ( apk add --no-cache rsync )"
+      - eval $(ssh-agent -s)
+      - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+      - mkdir -p ~/.ssh
+      - chmod 700 ~/.ssh
+      - rsync -e 'ssh -o StrictHostKeyChecking=no' -rlptgDvz --exclude=node_modules . /home/debian/tenanttopia-backend
+      - cd /home/debian/tenanttopia-backend
+      - docker-compose.yml build
+      - docker-compose.yml up -d
+    when:
+      branch:
+        - master
+      event:
+        - push
+
+services:
+  - name: run docker service
+    image: docker:dind
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    volumes:
+      - name: dockersock
+        path: /var/run
+
+volumes:
+  - name: dockersock
+    temp: {}
+  - name: hosts
+    host:
+      path: /etc/hosts
+
+trigger:
+  event:
+    exclude:
+      - pull_request
