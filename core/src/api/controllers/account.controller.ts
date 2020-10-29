@@ -5,6 +5,7 @@ import { CreateAccountDto } from '../../dtos/createAccount.dto';
 import { CurrentUser } from '../decorators/currentUser.decorator';
 import { Public } from '../decorators/public.decorator';
 import { ApiResponse } from '@nestjs/swagger';
+import { hostname } from 'os';
 
 @Controller('account')
 export class AccountController {
@@ -20,6 +21,7 @@ export class AccountController {
   @Get('current')
   @ApiResponse({ type: Account, status: 200 })
   getCurrentAccount(@CurrentUser() currentUser: Account): Account {
+    console.log(hostname());
     return currentUser;
   }
 }

@@ -1,4 +1,13 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  Render,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 import { AuthResponseDto } from '../../dtos/authResponse.dto';
 import { LoginDto } from '../../dtos/login.dto';
@@ -6,7 +15,7 @@ import { RefreshTokenDto } from '../../dtos/refreshToken.dto';
 import { AuthService } from '../../services/auth.service';
 import { ClientSecretGuard } from '../guards/clientSecret.guard';
 
-@Controller('auth')
+@Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -24,5 +33,13 @@ export class AuthController {
     @Body() refreshTokenDto: RefreshTokenDto
   ): Promise<AuthResponseDto> {
     return this.authService.refreshToken(refreshTokenDto);
+  }
+
+  @Get('verify/:code')
+  @Render('verification')
+  async verifyEmail(
+    @Param('code', ParseUUIDPipe) code: string
+  ): Promise<Record<string, unknown>> {
+    return { message: await this.authService.verifyEmail(code) };
   }
 }

@@ -46,12 +46,13 @@
     "bcrypt": "^5.0.0",
     "class-transformer": "^0.3.1",
     "class-validator": "^0.12.2",
+    "hbs": "^4.1.1",
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.3.2",
     "pg-hstore": "^2.3.3",
     "rxjs": "^6.6.3",
+    "sqlite3": "^5.0.0",
     "swagger-ui-express": "^4.1.4",
-    "typeorm": "^0.2.26",
-    "sqlite3": "^5.0.0"
+    "typeorm": "^0.2.26"
   }
 }

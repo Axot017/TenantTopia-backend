@@ -16,7 +16,9 @@ export class MicroserviceService {
     private readonly userRepository: UserRepository,
     private readonly configService: ConfigService,
     @Inject('CORE_MICROSERVICE_CLIENT')
-    private readonly coreClient: ClientProxy
+    private readonly coreClient: ClientProxy,
+    @Inject('MESSAGING_MICROSERVICE_CLIENT')
+    private readonly messagingClient: ClientProxy
   ) {}
 
   async validateToken(authenticationHeader: string): Promise<any> {
@@ -57,6 +59,8 @@ export class MicroserviceService {
       email: createUserDto.email,
       password: hashedPassword,
     } as User;
-    return this.userRepository.save(user);
+
+    const savedUser = await this.userRepository.save(user);
+    return savedUser;
   }
 }
