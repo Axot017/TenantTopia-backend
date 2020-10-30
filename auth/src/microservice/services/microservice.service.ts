@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { verify } from 'jsonwebtoken';
@@ -9,6 +9,7 @@ import { CreateUserDto } from '../dtos/createUser.dto';
 import { timeout, catchError } from 'rxjs/operators';
 import { throwError, TimeoutError } from 'rxjs';
 import { hash } from 'bcrypt';
+import { resolve } from 'url';
 
 @Injectable()
 export class MicroserviceService {
@@ -60,7 +61,28 @@ export class MicroserviceService {
       password: hashedPassword,
     } as User;
 
-    const savedUser = await this.userRepository.save(user);
+    await this.userRepository.save(user);
+
+    const savedUser = await this.userRepository.findOneByEmail(
+      createUserDto.email
+    );
+
+    const baseUrl = this.configService.get<string>('baseUrl');
+    const confirmationUrl = resolve(
+      resolve(baseUrl, '/verify/'),
+      savedUser.confirmationCode
+    );
+
+    Logger.log(`Confirmation url for ${savedUser.email} - ${confirmationUrl}`);
+
+    this.messagingClient.emit(
+      { cmd: 'sendVerificationEmail' },
+      {
+        email: savedUser.email,
+        confirmationUrl,
+      }
+    );
+
     return savedUser;
   }
 }

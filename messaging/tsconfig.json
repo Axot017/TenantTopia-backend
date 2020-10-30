@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "types": ["bluebird", "node", "validator", "jest", "express"],
+    "types": ["bluebird", "node", "jest", "express"],
     "target": "ES6",
     "module": "commonJS",
     "rootDir": "src",

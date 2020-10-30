@@ -48,11 +48,24 @@ services:
       - db
       - rabbitmq
     environment:
+      - "BASE_URL=https://tenanttopia.com" # zamienić na właściwy url
       - DB_USERNAME=postgres
       - DB_PASSWORD=Test123
       - DB_HOST=db
       - DB_DATABASE=core_db
       - DB_PORT=5432
       - DB_TYPE=pg
+      - PORT=3333
+      - "RABBITMQ_URL=amqp://rabbitmq:5672"
+  messaging-service:
+    build: "./messaging"
+    volumes:
+      - ./messaging:/home/node/app
+    ports:
+      - 3300:3333
+    depends_on:
+      - db
+      - rabbitmq
+    environment:
       - PORT=3333
       - "RABBITMQ_URL=amqp://rabbitmq:5672"

@@ -22,7 +22,7 @@ export class User {
   @Column({ generated: 'uuid' })
   confirmationCode: string;
 
-  @Column({ default: true }) //TODO: change to false when email confirmation will be ready
+  @Column({ default: false })
   isConfirmed: boolean;
 
   @CreateDateColumn()

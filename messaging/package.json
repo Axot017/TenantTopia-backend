@@ -40,6 +40,7 @@
     "amqp-connection-manager": "^3.2.1",
     "amqplib": "^0.6.0",
     "nodemailer": "^6.4.14",
+    "reflect-metadata": "^0.1.13",
     "rxjs": "^6.6.3"
   }
 }
