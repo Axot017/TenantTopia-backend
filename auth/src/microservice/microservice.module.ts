@@ -11,6 +11,16 @@ import { ClientOptions, ClientProxyFactory } from '@nestjs/microservices';
   providers: [
     MicroserviceService,
     {
+      provide: 'MESSAGING_MICROSERVICE_CLIENT',
+      useFactory: (configService: ConfigService) => {
+        const coreMicroserviceOptions = configService.get<ClientOptions>(
+          'messagingMicroserviceOptions'
+        );
+        return ClientProxyFactory.create(coreMicroserviceOptions);
+      },
+      inject: [ConfigService],
+    },
+    {
       provide: 'CORE_MICROSERVICE_CLIENT',
       useFactory: (configService: ConfigService) => {
         const coreMicroserviceOptions = configService.get<ClientOptions>(

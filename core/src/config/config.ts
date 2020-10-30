@@ -3,7 +3,7 @@ import { Transport } from '@nestjs/microservices';
 import { dbConfig } from './dbConfig';
 
 export default (): any => ({
-  db: dbConfig,
+  db: dbConfig[process.env.DB_TYPE || 'sqlite'],
   authMicroserviceOptions: {
     transport: Transport.RMQ,
     options: {

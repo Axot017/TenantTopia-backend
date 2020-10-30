@@ -33,6 +33,10 @@ export class Account {
 
   @ApiProperty()
   @Column({ nullable: true })
+  accountNo: string;
+
+  @ApiProperty()
+  @Column({ nullable: true })
   avatarUrl: string;
 
   @CreateDateColumn()

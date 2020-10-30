@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "types": ["bluebird", "node", "jest", "express"],
+    "target": "ES6",
+    "module": "commonJS",
+    "rootDir": "src",
+    "outDir": "dist",
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "lib": ["ES6", "DOM"],
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "include": ["src/**/*.ts", "index.ts", "test.setup.ts"],
+  "exclude": ["node_modules"]
+}

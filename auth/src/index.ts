@@ -3,9 +3,12 @@ import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { join } from 'path';
+import { NestExpressApplication } from '@nestjs/platform-express';
 
 (async () => {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.setGlobalPrefix('auth');
   app.useGlobalPipes(new ValidationPipe());
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
@@ -23,6 +26,10 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
+
+  app.setBaseViewsDir(join(__dirname, 'views'));
+  app.useStaticAssets(join(__dirname, 'public'));
+  app.setViewEngine('hbs');
 
   await app.listen(parseInt(process.env.PORT) || 3100);
 })();

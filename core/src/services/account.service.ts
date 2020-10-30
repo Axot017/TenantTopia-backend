@@ -12,6 +12,7 @@ import { Account } from '../db/models/account.model';
 import { AccountRepository } from '../db/repositories/account.repository';
 import { CreateAccountDto } from '../dtos/createAccount.dto';
 import { timeout } from 'rxjs/operators';
+import { EditAccountDto } from '../dtos/editAccount.dto';
 
 @Injectable()
 export class AccountService {
@@ -65,5 +66,12 @@ export class AccountService {
       throw new ServiceUnavailableException('Auth service is unavaliable');
     }
     return null;
+  }
+
+  async editCurrentAccount(
+    currentUser: Account,
+    editAccountDto: EditAccountDto
+  ): Promise<void> {
+    await this.accountRepository.save({ ...currentUser, ...editAccountDto });
   }
 }

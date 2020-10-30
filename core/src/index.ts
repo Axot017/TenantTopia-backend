@@ -6,6 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 (async () => {
   const app = await NestFactory.create(AppModule);
+  app.setGlobalPrefix('core');
   app.useGlobalPipes(new ValidationPipe());
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,

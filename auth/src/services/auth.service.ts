@@ -21,11 +21,7 @@ export class AuthService {
   ) {}
 
   async login(loginDto: LoginDto): Promise<AuthResponseDto> {
-    const user = await this.userRepository.findOne({
-      where: {
-        email: loginDto.email,
-      },
-    });
+    const user = await this.userRepository.findOneByEmail(loginDto.email);
 
     if (!user) {
       throw new UnauthorizedException('Invalid user or password');
@@ -54,9 +50,7 @@ export class AuthService {
         userId: number;
       };
 
-      user = await this.userRepository.findOne({
-        where: { userId: tokenPayload.userId },
-      });
+      user = await this.userRepository.findOneById(tokenPayload.userId);
     } catch (e) {
       throw new UnauthorizedException();
     }
@@ -95,5 +89,21 @@ export class AuthService {
       refreshTokenExpiresIn,
       accessTokenExpiresIn,
     };
+  }
+
+  async verifyEmail(code: string): Promise<string> {
+    const user = await this.userRepository.findOneByConfirmationCode(code);
+
+    if (!user) {
+      return 'Invalid verificaiton code!';
+    } else if (user.isConfirmed) {
+      return 'Email already confirmed!';
+    }
+
+    user.isConfirmed = true;
+
+    await this.userRepository.save(user);
+
+    return 'Email confirmed!';
   }
 }
