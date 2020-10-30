@@ -61,11 +61,8 @@ services:
     build: "./messaging"
     volumes:
       - ./messaging:/home/node/app
-    ports:
-      - 3300:3333
     depends_on:
       - db
       - rabbitmq
     environment:
-      - PORT=3333
       - "RABBITMQ_URL=amqp://rabbitmq:5672"
