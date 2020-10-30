@@ -69,7 +69,7 @@ export class MicroserviceService {
 
     const baseUrl = this.configService.get<string>('baseUrl');
     const confirmationUrl = resolve(
-      resolve(baseUrl, '/verify/'),
+      resolve(baseUrl, '/auth/verify/'),
       savedUser.confirmationCode
     );
 

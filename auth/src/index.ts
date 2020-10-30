@@ -8,6 +8,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 
 (async () => {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.setGlobalPrefix('auth');
   app.useGlobalPipes(new ValidationPipe());
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,

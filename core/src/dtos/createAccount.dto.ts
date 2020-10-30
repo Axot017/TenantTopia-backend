@@ -19,4 +19,7 @@ export class CreateAccountDto {
 
   @ApiProperty()
   phoneNo: string;
+
+  @ApiProperty()
+  accountNo: string;
 }
