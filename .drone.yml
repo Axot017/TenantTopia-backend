@@ -25,10 +25,9 @@ steps:
       - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
       - mkdir -p ~/.ssh
       - chmod 700 ~/.ssh
-      - rsync -e 'ssh -o StrictHostKeyChecking=no' -rlptgDvz --exclude=node_modules . /home/debian/tenanttopia-backend
-      - cd /home/debian/tenanttopia-backend
-      - docker-compose.yml build
-      - docker-compose.yml up -d
+      - rsync -e 'ssh -o StrictHostKeyChecking=no' -rlptgDvz --exclude=node_modules . debian@tenanttopia.pl:/home/debian/tenanttopia-backend
+      - ssh -A debian@tenanttopia.pl 'cd /home/debian/tenanttopia-backend/; docker-compose build'
+      - ssh -A debian@tenanttopia.pl 'cd /home/debian/tenanttopia-backend/; docker-compose up -d'
     when:
       branch:
         - master
