@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Controller } from '@nestjs/common';
+import { Controller, Logger } from '@nestjs/common';
 import { Payload, MessagePattern } from '@nestjs/microservices';
 import { User } from '../../db/models/user.model';
 import { CreateUserDto } from '../dtos/createUser.dto';
@@ -16,6 +16,7 @@ export class MicroserviceController {
 
   @MessagePattern({ cmd: 'createUser' })
   createUser(@Payload() createUserDto: CreateUserDto): Promise<User> {
+    Logger.log(createUserDto);
     return this.service.createUser(createUserDto);
   }
 }

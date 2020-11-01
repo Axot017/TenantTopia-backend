@@ -6,9 +6,8 @@ services:
     environment:
       - POSTGRES_PASSWORD=Test123
       - POSTGRES_USER=postgres
-      - POSTGRES_DB=core_db
     ports:
-      - 5432:5432
+      - 5433:5432
     volumes:
       - ./pgdata:/var/lib/postgresql/data
   rabbitmq:
@@ -30,6 +29,7 @@ services:
       - db
       - rabbitmq
     environment:
+      - "BASE_URL=https://api.tenanttopia.pl" # zamienić na właściwy url
       - DB_USERNAME=postgres
       - DB_PASSWORD=Test123
       - DB_DATABASE=auth_db
@@ -48,7 +48,6 @@ services:
       - db
       - rabbitmq
     environment:
-      - "BASE_URL=https://tenanttopia.com" # zamienić na właściwy url
       - DB_USERNAME=postgres
       - DB_PASSWORD=Test123
       - DB_HOST=db

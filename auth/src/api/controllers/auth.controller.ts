@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Logger,
   Param,
   ParseUUIDPipe,
   Post,
@@ -40,6 +41,10 @@ export class AuthController {
   async verifyEmail(
     @Param('code', ParseUUIDPipe) code: string
   ): Promise<Record<string, unknown>> {
-    return { message: await this.authService.verifyEmail(code) };
+    const message = await this.authService.verifyEmail(code).catch((e) => {
+      Logger.warn(e);
+      return 'Unexpected error';
+    });
+    return { message };
   }
 }

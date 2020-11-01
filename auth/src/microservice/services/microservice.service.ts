@@ -61,11 +61,7 @@ export class MicroserviceService {
       password: hashedPassword,
     } as User;
 
-    await this.userRepository.save(user);
-
-    const savedUser = await this.userRepository.findOneByEmail(
-      createUserDto.email
-    );
+    const savedUser = await this.userRepository.save(user);
 
     const baseUrl = this.configService.get<string>('baseUrl');
     const confirmationUrl = resolve(
