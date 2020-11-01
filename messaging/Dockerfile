@@ -8,11 +8,9 @@ COPY package*.json ./
 
 COPY tsconfig.json ./
 
-COPY src /home/node/app/src
-
 RUN npm install
 
-RUN npm run tsc
+COPY src /home/node/app/src
 
 EXPOSE 3333
 

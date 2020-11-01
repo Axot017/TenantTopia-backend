@@ -26,9 +26,7 @@ export class AccountService {
 
   async createAccount(createAccountDto: CreateAccountDto): Promise<void> {
     const isEmailFree = await this.accountRepository
-      .findOne({
-        where: { email: createAccountDto.email },
-      })
+      .findOneByEmail(createAccountDto.email)
       .then((user) => !user);
 
     if (!isEmailFree) {
@@ -42,16 +40,12 @@ export class AccountService {
 
     try {
       const { password, ...account } = createAccountDto;
-      await queryRunner.manager.save(Account, account);
-
-      const user = await this.accountRepository.findOne({
-        where: { email: createAccountDto.email },
-      });
+      const user = await queryRunner.manager.save(Account, account);
 
       await this.coreClient
         .send(
           { cmd: 'createUser' },
-          { password, email: account.email, userId: user.id }
+          { password, email: account.email, userId: (user as Account).id }
         )
         .pipe(timeout(5000))
         .toPromise();

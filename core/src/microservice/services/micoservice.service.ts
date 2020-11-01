@@ -8,7 +8,7 @@ export class MicroserviceService {
   constructor(private readonly accountRepository: AccountRepository) {}
 
   async getAccountById(id: number): Promise<Account> {
-    const account = await this.accountRepository.findOne({ where: { id } });
+    const account = await this.accountRepository.findOne(id);
 
     if (!account) {
       throw new RpcException('Account not existing');
