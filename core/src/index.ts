@@ -23,7 +23,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('core/api', app, document);
 
   await app.listen(parseInt(process.env.PORT) || 3000);
 })();

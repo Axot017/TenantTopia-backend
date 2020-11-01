@@ -25,7 +25,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('auth/api', app, document);
 
   app.setBaseViewsDir(join(__dirname, 'views'));
   app.useStaticAssets(join(__dirname, 'public'));
