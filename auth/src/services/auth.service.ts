@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -12,6 +11,10 @@ import { UserRepository } from '../db/repositories/user.repository';
 import { AuthResponseDto } from '../dtos/authResponse.dto';
 import { LoginDto } from '../dtos/login.dto';
 import { RefreshTokenDto } from '../dtos/refreshToken.dto';
+
+export const EMAIL_CONFIRMED = 'Email confirmed!';
+export const EMAIL_ALREADY_CONFIRMED = 'Email confirmed!';
+export const INVALID_VERIFICATION_CODE = 'Invalid verification code!';
 
 @Injectable()
 export class AuthService {
@@ -28,7 +31,7 @@ export class AuthService {
     }
 
     if (!user.isConfirmed) {
-      throw new BadRequestException('User not confirmed');
+      throw new UnauthorizedException('User not confirmed');
     }
 
     if (!compareSync(loginDto.password, user.password)) {
@@ -95,15 +98,15 @@ export class AuthService {
     const user = await this.userRepository.findOneByConfirmationCode(code);
 
     if (!user) {
-      return 'Invalid verificaiton code!';
+      return INVALID_VERIFICATION_CODE;
     } else if (user.isConfirmed) {
-      return 'Email already confirmed!';
+      return EMAIL_ALREADY_CONFIRMED;
     }
 
     user.isConfirmed = true;
 
     await this.userRepository.save(user);
 
-    return 'Email confirmed!';
+    return EMAIL_CONFIRMED;
   }
 }

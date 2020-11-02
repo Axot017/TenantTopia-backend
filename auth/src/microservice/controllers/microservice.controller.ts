@@ -16,7 +16,6 @@ export class MicroserviceController {
 
   @MessagePattern({ cmd: 'createUser' })
   createUser(@Payload() createUserDto: CreateUserDto): Promise<User> {
-    Logger.log(createUserDto);
     return this.service.createUser(createUserDto);
   }
 }
