@@ -6,10 +6,13 @@ services:
     environment:
       - POSTGRES_PASSWORD=Test123
       - POSTGRES_USER=postgres
+      - POSTGRES_MULTIPLE_DATABASES=auth_db,core_db
     ports:
       - 5433:5432
     volumes:
-      - ./pgdata:/var/lib/postgresql/data
+      - /var/lib/postgresql/data
+      - ./database:/docker-entrypoint-initdb.d
+
   rabbitmq:
     image: rabbitmq:3.7-management
     container_name: rabbitmq
@@ -19,12 +22,12 @@ services:
     ports:
       - 15672:15672
       - 5672:5672
+
   auth-service:
     build: "./auth"
     volumes:
       - ./auth:/home/node/app
-    ports:
-      - 3100:3333
+      - /home/node/app/node_modules
     depends_on:
       - db
       - rabbitmq
@@ -38,12 +41,12 @@ services:
       - DB_TYPE=pg
       - PORT=3333
       - "RABBITMQ_URL=amqp://rabbitmq:5672"
+
   core-service:
     build: "./core"
     volumes:
       - ./core:/home/node/app
-    ports:
-      - 3200:3333
+      - /home/node/app/node_modules
     depends_on:
       - db
       - rabbitmq
@@ -56,12 +59,22 @@ services:
       - DB_TYPE=pg
       - PORT=3333
       - "RABBITMQ_URL=amqp://rabbitmq:5672"
+
   messaging-service:
     build: "./messaging"
     volumes:
       - ./messaging:/home/node/app
+      - /home/node/app/node_modules
     depends_on:
       - db
       - rabbitmq
     environment:
       - "RABBITMQ_URL=amqp://rabbitmq:5672"
+  
+  nginx:
+    build: ./nginx
+    depends_on:
+      - auth-service
+      - core-service
+    ports:
+      - 80:80
