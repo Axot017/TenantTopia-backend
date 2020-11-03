@@ -77,4 +77,4 @@ services:
       - auth-service
       - core-service
     ports:
-      - 80:80
+      - 8080:80
