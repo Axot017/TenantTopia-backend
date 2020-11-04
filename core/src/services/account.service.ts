@@ -66,7 +66,6 @@ export class AccountService {
 
       throw new ServiceUnavailableException('Auth service is unavaliable');
     }
-    return null;
   }
 
   async editCurrentAccount(

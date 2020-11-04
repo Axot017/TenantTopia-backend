@@ -4,9 +4,12 @@ import {
   CreateDateColumn,
   Entity,
   Index,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Flat } from './flat.model';
+import { Room } from './room.model';
 
 @Entity()
 export class Account {
@@ -38,6 +41,12 @@ export class Account {
   @ApiProperty()
   @Column({ nullable: true })
   avatarUrl: string;
+
+  @OneToOne(() => Flat, (flat) => flat.owner)
+  flat: Flat;
+
+  @OneToOne(() => Room, (room) => room.owner)
+  room: Room;
 
   @CreateDateColumn()
   createdAt: Date;
