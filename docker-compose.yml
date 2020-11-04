@@ -32,7 +32,7 @@ services:
       - db
       - rabbitmq
     environment:
-      - "BASE_URL=https://api.tenanttopia.pl" # zamienić na właściwy url
+      - "BASE_URL=https://api.tenanttopia.pl"
       - DB_USERNAME=postgres
       - DB_PASSWORD=Test123
       - DB_DATABASE=auth_db
@@ -51,6 +51,7 @@ services:
       - db
       - rabbitmq
     environment:
+      - "BASE_URL=https://api.tenanttopia.pl"
       - DB_USERNAME=postgres
       - DB_PASSWORD=Test123
       - DB_HOST=db
@@ -70,7 +71,7 @@ services:
       - rabbitmq
     environment:
       - "RABBITMQ_URL=amqp://rabbitmq:5672"
-  
+
   nginx:
     build: ./nginx
     depends_on:

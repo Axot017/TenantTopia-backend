@@ -4,6 +4,7 @@ import { dbConfig } from './dbConfig';
 
 export default (): any => ({
   db: dbConfig[process.env.DB_TYPE || 'sqlite'],
+  baseUrl: process.env.BASE_URL || 'http://127.0.0.1:8080',
   authMicroserviceOptions: {
     transport: Transport.RMQ,
     options: {

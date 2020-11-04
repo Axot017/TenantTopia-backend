@@ -13,6 +13,10 @@ import { AccountRepository } from '../db/repositories/account.repository';
 import { CreateAccountDto } from '../dtos/createAccount.dto';
 import { timeout } from 'rxjs/operators';
 import { EditAccountDto } from '../dtos/editAccount.dto';
+import { ConfigService } from '@nestjs/config';
+import { resolve } from 'url';
+
+export const AVATARS_FILE_DIR = './images/avatars';
 
 @Injectable()
 export class AccountService {
@@ -21,7 +25,8 @@ export class AccountService {
     @Inject('AUTH_MICROSERVICE_CLIENT')
     private readonly coreClient: ClientProxy,
     @InjectConnection()
-    private readonly connection: Connection
+    private readonly connection: Connection,
+    private readonly configService: ConfigService
   ) {}
 
   async createAccount(createAccountDto: CreateAccountDto): Promise<void> {
@@ -67,5 +72,13 @@ export class AccountService {
     editAccountDto: EditAccountDto
   ): Promise<void> {
     await this.accountRepository.save({ ...currentUser, ...editAccountDto });
+  }
+
+  async addAvatar(fileName: string, currentUser: Account): Promise<void> {
+    const baseUrl = this.configService.get<string>('baseUrl');
+    currentUser.avatarUrl = resolve(
+      resolve(baseUrl, '/core/account/avatar/'),
+      fileName
+    );
   }
 }

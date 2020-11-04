@@ -8,12 +8,14 @@ import { MicroserviceModule } from './microservice/microservice.module';
 import { AuthGuard } from './api/guards/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthClientModule } from './microservice/authClient.module';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
     AccountModule,
     MicroserviceModule,
     AuthClientModule,
+    MulterModule.register(),
     ConfigModule.forRoot({ load: [configuration] }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
