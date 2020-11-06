@@ -9,6 +9,8 @@ import { AuthGuard } from './api/guards/auth.guard';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthClientModule } from './microservice/authClient.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { Flat } from './db/models/flat.model';
+import { Room } from './db/models/room.model';
 
 @Module({
   imports: [
@@ -23,7 +25,7 @@ import { MulterModule } from '@nestjs/platform-express';
       useFactory: async (configService: ConfigService) => {
         return {
           ...configService.get<TypeOrmModuleOptions>('db'),
-          entities: [Account],
+          entities: [Account, Flat, Room],
         };
       },
     }),

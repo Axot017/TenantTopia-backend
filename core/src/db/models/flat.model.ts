@@ -23,14 +23,17 @@ export class Flat {
   @Column(() => Address)
   address: Address;
 
-  @Column('text', { array: true })
+  @Column({ default: false })
+  isConfirmed: boolean;
+
+  @Column('text', { array: true, nullable: true })
   images: string[];
 
   @OneToOne(() => Account, (account) => account.flat)
   @JoinColumn()
   owner: Account;
 
-  @OneToMany(() => Room, (room) => room.flat)
+  @OneToMany(() => Room, (room) => room.flat, { onDelete: 'CASCADE' })
   rooms: Room[];
 
   @CreateDateColumn()

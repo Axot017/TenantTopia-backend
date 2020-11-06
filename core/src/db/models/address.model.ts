@@ -1,18 +1,18 @@
 import { Column } from 'typeorm';
 
 export class Address {
-  @Column()
+  @Column({ nullable: true })
   address: string;
 
-  @Column()
+  @Column({ nullable: true })
   city: string;
 
-  @Column()
+  @Column({ nullable: true })
   zipCode: string;
 
-  @Column('decimal')
+  @Column('decimal', { nullable: true })
   lat: number;
 
-  @Column('decimal')
+  @Column('decimal', { nullable: true })
   lon: number;
 }
