@@ -11,12 +11,14 @@ import { AuthClientModule } from './microservice/authClient.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { Flat } from './db/models/flat.model';
 import { Room } from './db/models/room.model';
+import { FlatModule } from './api/flat.module';
 
 @Module({
   imports: [
     AccountModule,
     MicroserviceModule,
     AuthClientModule,
+    FlatModule,
     MulterModule.register(),
     ConfigModule.forRoot({ load: [configuration] }),
     TypeOrmModule.forRootAsync({
