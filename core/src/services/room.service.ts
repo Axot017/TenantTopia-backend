@@ -1,11 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { FlatRepository } from '../db/repositories/flat.repository';
+import { Room } from '../db/models/room.model';
+
 import { RoomRepository } from '../db/repositories/room.repository';
 
 @Injectable()
 export class RoomService {
-  constructor(
-    private readonly roomRepository: RoomRepository,
-    private readonly flatRepository: FlatRepository
-  ) {}
+  constructor(private readonly roomRepository: RoomRepository) {}
+
+  async getRoomsInRadius(
+    lat: number,
+    long: number,
+    radius: number
+  ): Promise<Array<Room>> {
+    const availableRooms = await this.roomRepository.getAvailableRoomsInRadius(
+      lat,
+      long,
+      radius
+    );
+
+    return availableRooms;
+  }
 }
