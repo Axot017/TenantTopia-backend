@@ -15,7 +15,7 @@ import { Room } from './room.model';
 @Entity()
 export class Flat {
   @PrimaryGeneratedColumn()
-  int: number;
+  id: number;
 
   @Column({ nullable: true })
   descritpion: string;

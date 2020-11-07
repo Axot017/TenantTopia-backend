@@ -37,7 +37,7 @@ export class FlatController {
     @Query('includeUnconfirmed') includeUnconfirmed: boolean,
     @CurrentUser() currentUser: Account
   ): Promise<Flat> {
-    return this.getFlat(includeUnconfirmed, currentUser);
+    return this.flatService.getFlat(includeUnconfirmed, currentUser);
   }
 
   @Delete()
