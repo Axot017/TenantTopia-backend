@@ -21,13 +21,14 @@ import { CreateAccountDto } from '../../dtos/createAccount.dto';
 import { EditAccountDto } from '../../dtos/editAccount.dto';
 import { CurrentUser } from '../decorators/currentUser.decorator';
 import { Public } from '../decorators/public.decorator';
-import { ApiResponse } from '@nestjs/swagger';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { Response } from 'express';
 import { createReadStream, existsSync } from 'fs';
 import { join } from 'path';
 
+@ApiTags('account')
 @Controller('account')
 export class AccountController {
   constructor(private readonly accountService: AccountService) {}
@@ -40,13 +41,13 @@ export class AccountController {
   }
 
   @Get('current')
-  @ApiResponse({ type: Account, status: 200 })
+  @ApiResponse({ type: () => Account, status: 200 })
   getCurrentAccount(@CurrentUser() currentUser: Account): Account {
     return currentUser;
   }
 
   @Patch('current')
-  @ApiResponse({ type: Account, status: 200 })
+  @ApiResponse({ type: () => Account, status: 200 })
   editCurrentAccount(
     @CurrentUser() currentUser: Account,
     @Body() editAccountDto: EditAccountDto
@@ -55,6 +56,7 @@ export class AccountController {
   }
 
   @Post('current/avatar')
+  @ApiResponse({ status: 201 })
   @UseInterceptors(
     FileInterceptor('image', {
       storage: diskStorage({
@@ -70,6 +72,7 @@ export class AccountController {
   }
 
   @Get('avatar/:img')
+  @ApiResponse({ status: 200 })
   getImage(@Param('img') img: string, @Res() res: Response): unknown {
     const dir = join(process.cwd(), 'images', 'avatars', img);
     if (existsSync(dir)) {

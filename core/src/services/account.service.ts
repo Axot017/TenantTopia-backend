@@ -14,7 +14,6 @@ import { CreateAccountDto } from '../dtos/createAccount.dto';
 import { timeout } from 'rxjs/operators';
 import { EditAccountDto } from '../dtos/editAccount.dto';
 import { ConfigService } from '@nestjs/config';
-import { resolve } from 'url';
 import { rmSync, existsSync } from 'fs';
 import { join } from 'path';
 
@@ -76,20 +75,19 @@ export class AccountService {
   }
 
   async addAvatar(fileName: string, currentUser: Account): Promise<void> {
-    const baseUrl = this.configService.get<string>('baseUrl');
-    if (currentUser.avatarUrl) {
-      const url = currentUser.avatarUrl;
-      const filename = url.substring(url.lastIndexOf('/') + 1);
-      const filePath = join(process.cwd(), 'images', 'avatars', filename);
+    if (currentUser.avatar) {
+      const filePath = join(
+        process.cwd(),
+        'images',
+        'avatars',
+        currentUser.avatar
+      );
 
       if (existsSync(filePath)) {
         rmSync(filePath);
       }
     }
-    currentUser.avatarUrl = resolve(
-      resolve(baseUrl, '/core/account/avatar/'),
-      fileName
-    );
+    currentUser.avatar = fileName;
     await this.accountRepository.save(currentUser);
   }
 }

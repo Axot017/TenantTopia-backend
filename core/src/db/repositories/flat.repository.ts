@@ -20,4 +20,11 @@ export class FlatRepository extends Repository<Flat> {
       .where('owner.id = :userId', { userId })
       .getOne();
   }
+
+  getUsersFlatByOwnerIdWithoutRooms(userId: number): Promise<Flat> {
+    return this.createQueryBuilder('flat')
+      .leftJoin('flat.owner', 'owner')
+      .where('owner.id = :userId', { userId })
+      .getOne();
+  }
 }

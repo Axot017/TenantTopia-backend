@@ -8,10 +8,12 @@ import { RoomService } from '../services/room.service';
 import { FlatController } from './controllers/flat.controller';
 import { RoomController } from './controllers/room.controller';
 import { RoomSearchController } from './controllers/room-search.controller';
+import { RoomSubscriber } from '../db/subscribers/room.subscriber';
+import { FlatSubscriber } from '../db/subscribers/flat.subscriber';
 
 @Module({
   controllers: [RoomSearchController, RoomController, FlatController],
-  providers: [FlatService, RoomService],
+  providers: [FlatService, RoomService, RoomSubscriber, FlatSubscriber],
   imports: [
     TypeOrmModule.forFeature([
       RoomRepository,

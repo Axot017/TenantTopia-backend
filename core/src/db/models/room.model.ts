@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   CreateDateColumn,
@@ -13,22 +14,31 @@ import { Flat } from './flat.model';
 
 @Entity()
 export class Room {
+  @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty()
   @Column({ default: false })
   isAvailable: boolean;
 
-  @Column()
+  @ApiProperty()
+  @Column({ nullable: true })
   name: string;
 
+  @ApiProperty()
   @Column({ nullable: true })
   description: string;
 
-  @Column('text', { array: true })
+  @ApiProperty()
+  @Column('decimal', { nullable: true })
+  cost: number;
+
+  @ApiProperty()
+  @Column('text', { array: true, nullable: true, default: '{}' })
   images: string[];
 
-  @ManyToOne(() => Flat, (flat) => flat.rooms)
+  @ManyToOne(() => Flat, (flat) => flat.rooms, { onDelete: 'CASCADE' })
   flat: Flat;
 
   @OneToOne(() => Account, (account) => account.room)

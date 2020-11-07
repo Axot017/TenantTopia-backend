@@ -4,10 +4,14 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { existsSync, rmSync } from 'fs';
+import { join } from 'path';
 import { Account } from '../db/models/account.model';
 import { Flat } from '../db/models/flat.model';
 import { FlatRepository } from '../db/repositories/flat.repository';
 import { ModifyFlatDto } from '../dtos/modifyFlat.dto';
+
+export const FLAT_IMAGES_DIR = './images/flat';
 
 @Injectable()
 export class FlatService {
@@ -29,7 +33,7 @@ export class FlatService {
       }
     }
 
-    return this.flatRepository.save(modifyFlatDto);
+    return this.flatRepository.save({ ...modifyFlatDto, owner: currentUser });
   }
 
   async updateFlat(
@@ -60,9 +64,7 @@ export class FlatService {
       currentUser.id
     );
 
-    if (!usersFlat) {
-      throw new NotFoundException('Flat not found');
-    }
+    this.validateFlat(usersFlat);
 
     await this.flatRepository.save({ ...usersFlat, isConfirmed: true });
   }
@@ -80,5 +82,64 @@ export class FlatService {
     }
 
     return usersFlat;
+  }
+
+  private validateFlat(flat: Flat) {
+    const address = flat.address;
+    if (!flat) {
+      throw new NotFoundException('Flat not found');
+    } else if (
+      !(
+        flat.description &&
+        address.address &&
+        address.city &&
+        address.zipCode &&
+        address.lat &&
+        address.lon
+      )
+    ) {
+      throw new BadRequestException('Not all fields added');
+    } else if ((flat.rooms ?? []).length === 0) {
+      throw new BadRequestException('No room added');
+    }
+  }
+
+  async uploadImage(filename: string, currentUser: Account): Promise<void> {
+    const usersFlat = await this.flatRepository.getUsersFlatByOwnerId(
+      currentUser.id
+    );
+
+    if (!usersFlat) {
+      const filePath = join(process.cwd(), 'images', 'flat', filename);
+      if (existsSync(filePath)) {
+        rmSync(filePath);
+      }
+      throw new BadRequestException("you don't have any flat");
+    }
+
+    usersFlat.images.push(filename);
+
+    await this.flatRepository.save(usersFlat);
+  }
+
+  async deleteImage(filename: string, currentUser: Account): Promise<void> {
+    const usersFlat = await this.flatRepository.getUsersFlatByOwnerId(
+      currentUser.id
+    );
+
+    if (!usersFlat) {
+      throw new BadRequestException("you don't have any flat");
+    }
+
+    const dir = join(process.cwd(), 'images', 'flat', filename);
+    if (existsSync(dir)) {
+      rmSync(dir);
+    } else {
+      throw new NotFoundException();
+    }
+
+    usersFlat.images = usersFlat.images.filter((item) => item !== filename);
+
+    await this.flatRepository.save(usersFlat);
   }
 }

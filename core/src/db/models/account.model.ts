@@ -40,7 +40,7 @@ export class Account {
 
   @ApiProperty()
   @Column({ nullable: true })
-  avatarUrl: string;
+  avatar: string;
 
   @OneToOne(() => Flat, (flat) => flat.owner)
   flat: Flat;
