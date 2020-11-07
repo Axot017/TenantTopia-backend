@@ -8,6 +8,8 @@ COPY package*.json ./
 
 COPY tsconfig.json ./
 
+COPY webpack.config.js ./
+
 RUN npm install
 
 COPY src /home/node/app/src

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
@@ -5,6 +6,8 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { join } from 'path';
 import { NestExpressApplication } from '@nestjs/platform-express';
+
+declare const module: any;
 
 (async () => {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -32,4 +35,9 @@ import { NestExpressApplication } from '@nestjs/platform-express';
   app.setViewEngine('hbs');
 
   await app.listen(parseInt(process.env.PORT) || 3100);
+
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
 })();
