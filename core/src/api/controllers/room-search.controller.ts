@@ -1,8 +1,4 @@
-import {
-  Controller,
-  Get,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { Room } from '../../db/models/room.model';
 import { RoomService } from '../../services/room.service';
 
@@ -12,11 +8,10 @@ export class RoomSearchController {
 
   @Get()
   getRoomsInRadius(
-      @Query('lat') lat: number,
-      @Query('long') long: number,
-      @Query('radius') radius:number,
-      ): Promise<Array<Room>> {
-      return this.roomService.getRoomsInRadius(lat, long, radius);
+    @Query('lat') lat: number,
+    @Query('long') long: number,
+    @Query('radius') radius: number
+  ): Promise<Array<Room>> {
+    return this.roomService.getRoomsInRadius(lat, long, radius);
   }
-
 }

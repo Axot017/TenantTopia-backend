@@ -16,7 +16,7 @@ export class Room {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({default: false})
+  @Column({ default: false })
   isAvailable: boolean;
 
   @Column()
