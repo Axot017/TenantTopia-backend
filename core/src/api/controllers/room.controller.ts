@@ -19,8 +19,8 @@ export class RoomController {
     return null;
   }
 
-  @Patch()
-  updateRoom(): Promise<Room> {
+  @Patch(':id')
+  updateRoom(@Param('id', ParseIntPipe) id: number): Promise<Room> {
     return null;
   }
 
