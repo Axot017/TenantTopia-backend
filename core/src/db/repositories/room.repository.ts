@@ -10,11 +10,10 @@ export class RoomRepository extends Repository<Room> {
   ): Promise<Array<Room>> {
     return this.createQueryBuilder('room')
       .innerJoinAndSelect('room.flat', 'flat')
-      .addSelect(
-        `SQRT(POW(69.1 * (flat.address.lat - ${lat}), 2) + POW(69.1 * (${long} - flat.address.lon) * COS(flat.address.lat / 57.3), 2))`,
-        'distance'
+      .where(
+        `( 6371 * acos( cos( radians(:lat) ) * cos( radians( flat.address.lat ) ) * cos ( radians(flat.address.lon) - radians(:long)) + sin(radians(:lat)) * sin( radians(flat.address.lat)))) < :radius`,
+        { lat, long, radius }
       )
-      .where(`flat.id < ${radius}`)
       .andWhere('room.isAvailable')
       .getMany();
   }
