@@ -8,7 +8,6 @@ import { FlatRepository } from '../db/repositories/flat.repository';
 import { RoomRepository } from '../db/repositories/room.repository';
 import { CreateRoomDto } from '../dtos/createRoom.dto';
 import { EditRoomDto } from '../dtos/editRoom.dto';
-import { exception } from 'console';
 
 export const ROOM_IMAGES_DIR = './images/room';
 
