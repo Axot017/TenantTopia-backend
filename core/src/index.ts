@@ -1,11 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { NestExpressApplication } from '@nestjs/platform-express';
+
+declare const module: any;
 
 (async () => {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   app.setGlobalPrefix('core');
   app.useGlobalPipes(new ValidationPipe());
   app.connectMicroservice<MicroserviceOptions>({
@@ -26,4 +30,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
   SwaggerModule.setup('core/api', app, document);
 
   await app.listen(parseInt(process.env.PORT) || 3000);
+
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+  }
 })();

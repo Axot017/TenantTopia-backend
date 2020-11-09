@@ -3,50 +3,47 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Index,
+  JoinColumn,
+  ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Account } from './account.model';
 import { Flat } from './flat.model';
-import { Room } from './room.model';
 
 @Entity()
-export class Account {
+export class Room {
   @ApiProperty()
   @PrimaryGeneratedColumn()
   id: number;
 
   @ApiProperty()
-  @Index()
-  @Column()
-  email: string;
+  @Column({ default: false })
+  isAvailable: boolean;
 
   @ApiProperty()
   @Column({ nullable: true })
-  firstName: string;
+  name: string;
 
   @ApiProperty()
   @Column({ nullable: true })
-  lastName: string;
+  description: string;
 
   @ApiProperty()
-  @Column({ nullable: true })
-  phoneNo: string;
+  @Column('decimal', { nullable: true })
+  cost: number;
 
   @ApiProperty()
-  @Column({ nullable: true })
-  accountNo: string;
+  @Column('text', { array: true, nullable: true, default: '{}' })
+  images: string[];
 
-  @ApiProperty()
-  @Column({ nullable: true })
-  avatar: string;
-
-  @OneToOne(() => Flat, (flat) => flat.owner)
+  @ManyToOne(() => Flat, (flat) => flat.rooms, { onDelete: 'CASCADE' })
   flat: Flat;
 
-  @OneToOne(() => Room, (room) => room.owner)
-  room: Room;
+  @OneToOne(() => Account, (account) => account.room)
+  @JoinColumn()
+  owner: Account;
 
   @CreateDateColumn()
   createdAt: Date;

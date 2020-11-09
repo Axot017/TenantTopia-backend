@@ -17,6 +17,7 @@ export const dbConfig: Record<string, TypeOrmModuleOptions> = {
     database: process.env.DB_DATABASE || 'core_db',
     synchronize: true,
     logging: false,
+    keepConnectionAlive: true,
     extra: {
       connectionLimit: 5,
     },

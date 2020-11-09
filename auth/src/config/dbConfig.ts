@@ -16,6 +16,7 @@ export const dbConfig: Record<string, TypeOrmModuleOptions> = {
     password: process.env.DB_PASSWORD || 'Test123',
     database: process.env.DB_DATABASE || 'auth_db',
     synchronize: true,
+    keepConnectionAlive: true,
     logging: false,
     extra: {
       connectionLimit: 5,
