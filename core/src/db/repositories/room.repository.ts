@@ -8,7 +8,13 @@ export class RoomRepository extends Repository<Room> {
     long: number,
     radius: number
   ): Promise<Array<Room>> {
-    // TODO: add logic responsible for filtering by lat long distance
-    return this.createQueryBuilder('room').where('"isAvailable"').getMany();
+    return this.createQueryBuilder('room')
+      .innerJoinAndSelect('room.flat', 'flat')
+      .where(
+        `( 6371 * acos( cos( radians(:lat) ) * cos( radians( flat.address.lat ) ) * cos ( radians(flat.address.lon) - radians(:long)) + sin(radians(:lat)) * sin( radians(flat.address.lat)))) < :radius`,
+        { lat, long, radius }
+      )
+      .andWhere('room.isAvailable')
+      .getMany();
   }
 }
