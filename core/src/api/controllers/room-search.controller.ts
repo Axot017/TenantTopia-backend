@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { Room } from '../../db/models/room.model';
 import { RoomService } from '../../services/room.service';
-import { ParseNumberPipe } from '../pipes/isNumber.pipe';
+import { ParseNumberPipe } from '../pipes/parseNumber.pipe';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('rooms')

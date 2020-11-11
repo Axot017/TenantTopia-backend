@@ -24,10 +24,6 @@ export class RoomService {
     long: number,
     radius: number
   ): Promise<Array<Room>> {
-    if (!(lat && long && radius)) {
-      return [];
-    }
-
     const availableRooms = await this.roomRepository.getAvailableRoomsInRadius(
       lat,
       long,
