@@ -12,6 +12,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { Flat } from './db/models/flat.model';
 import { Room } from './db/models/room.model';
 import { FlatModule } from './api/flat.module';
+import { Note } from './db/models/note.model';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { FlatModule } from './api/flat.module';
       useFactory: async (configService: ConfigService) => {
         return {
           ...configService.get<TypeOrmModuleOptions>('db'),
-          entities: [Account, Flat, Room],
+          entities: [Account, Flat, Room, Note],
         };
       },
     }),

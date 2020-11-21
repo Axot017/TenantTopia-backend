@@ -7,9 +7,11 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { Flat } from './flat.model';
 import { Room } from './room.model';
+import { Note } from './note.model';
 
 @Entity()
 export class Account {
@@ -47,6 +49,9 @@ export class Account {
 
   @OneToOne(() => Room, (room) => room.owner)
   room: Room;
+
+  @OneToMany(() => Note, (note) => note.flat)
+  notes: Note[];
 
   @CreateDateColumn()
   createdAt: Date;

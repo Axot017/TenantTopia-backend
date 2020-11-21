@@ -10,15 +10,30 @@ import { RoomController } from './controllers/room.controller';
 import { RoomSearchController } from './controllers/room-search.controller';
 import { RoomSubscriber } from '../db/subscribers/room.subscriber';
 import { FlatSubscriber } from '../db/subscribers/flat.subscriber';
+import { NoteController } from './controllers/note.controller';
+import { NoteRepository } from '../db/repositories/note.repository';
+import { NoteService } from '../services/note.service';
 
 @Module({
-  controllers: [RoomSearchController, RoomController, FlatController],
-  providers: [FlatService, RoomService, RoomSubscriber, FlatSubscriber],
+  controllers: [
+    RoomSearchController,
+    RoomController,
+    FlatController,
+    NoteController,
+  ],
+  providers: [
+    FlatService,
+    RoomService,
+    NoteService,
+    RoomSubscriber,
+    FlatSubscriber,
+  ],
   imports: [
     TypeOrmModule.forFeature([
       RoomRepository,
       AccountRepository,
       FlatRepository,
+      NoteRepository,
     ]),
   ],
 })
