@@ -12,6 +12,7 @@ import {
 import { Account } from './account.model';
 import { Address } from './address.model';
 import { Room } from './room.model';
+import { Note } from './note.model';
 
 @Entity()
 export class Flat {
@@ -42,6 +43,10 @@ export class Flat {
   @ApiProperty()
   @OneToMany(() => Room, (room) => room.flat)
   rooms: Room[];
+
+  @ApiProperty()
+  @OneToMany(() => Note, (note) => note.flat)
+  notes: Note[];
 
   @CreateDateColumn()
   createdAt: Date;
