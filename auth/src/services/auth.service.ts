@@ -75,14 +75,14 @@ export class AuthService {
     );
 
     const accessToken = sign({ userId: user.userId }, privateKey, {
-      expiresIn: accessTokenExpiresIn,
+      expiresIn: `${accessTokenExpiresIn}ms`,
     });
 
     const refreshToken = sign(
       { userId: user.userId, accessToken },
       privateKey,
       {
-        expiresIn: refreshTokenExpiresIn,
+        expiresIn: `${refreshTokenExpiresIn}ms`,
       }
     );
 

@@ -12,6 +12,7 @@ import { MulterModule } from '@nestjs/platform-express';
 import { Flat } from './db/models/flat.model';
 import { Room } from './db/models/room.model';
 import { FlatModule } from './api/flat.module';
+import { ScheduleModule } from '@nestjs/schedule';
 import { Note } from './db/models/note.model';
 
 @Module({
@@ -21,6 +22,7 @@ import { Note } from './db/models/note.model';
     AuthClientModule,
     FlatModule,
     MulterModule.register(),
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({ load: [configuration] }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],

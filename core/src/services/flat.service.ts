@@ -4,6 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { existsSync, rmSync } from 'fs';
 import { join } from 'path';
 import { Account } from '../db/models/account.model';
@@ -141,5 +142,10 @@ export class FlatService {
     usersFlat.images = usersFlat.images.filter((item) => item !== filename);
 
     await this.flatRepository.save(usersFlat);
+  }
+
+  @Cron(CronExpression.EVERY_2_HOURS)
+  deleteUnconfirmedFlats(): void {
+    this.flatRepository.deleteUnconfirmedFlats();
   }
 }

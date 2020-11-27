@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { DeleteResult, EntityRepository, Repository } from 'typeorm';
 import { Flat } from '../models/flat.model';
 
 @EntityRepository(Flat)
@@ -26,5 +26,18 @@ export class FlatRepository extends Repository<Flat> {
       .leftJoin('flat.owner', 'owner')
       .where('owner.id = :userId', { userId })
       .getOne();
+  }
+
+  async deleteUnconfirmedFlats(): Promise<void> {
+    const date = new Date();
+    date.setHours(date.getHours() - 4);
+
+    // Select and delete separated to trigger listeners that will remove images
+    const toDelete = await this.createQueryBuilder('flat')
+      .where('NOT flat.isConfirmed')
+      .andWhere('flat.updatedAt < :date', { date: date.toLocaleString() })
+      .getMany();
+
+    await this.remove(toDelete);
   }
 }
