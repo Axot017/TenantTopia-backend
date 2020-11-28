@@ -22,7 +22,7 @@ export class User {
   @Column({ generated: 'uuid' })
   confirmationCode: string;
 
-  @Column({ default: true })
+  @Column({ default: false })
   isConfirmed: boolean;
 
   @CreateDateColumn()
