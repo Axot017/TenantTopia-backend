@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { existsSync, rmSync } from 'fs';
 import { join } from 'path';
 import { Account } from '../db/models/account.model';
@@ -8,6 +12,7 @@ import { FlatRepository } from '../db/repositories/flat.repository';
 import { RoomRepository } from '../db/repositories/room.repository';
 import { CreateRoomDto } from '../dtos/createRoom.dto';
 import { EditRoomDto } from '../dtos/editRoom.dto';
+import { PaymentService } from './payment.service';
 
 export const ROOM_IMAGES_DIR = './images/room';
 
@@ -16,7 +21,8 @@ export class RoomService {
   constructor(
     private readonly roomRepository: RoomRepository,
     private readonly flatRepository: FlatRepository,
-    private readonly accountRepository: AccountRepository
+    private readonly accountRepository: AccountRepository,
+    private readonly paymentService: PaymentService
   ) {}
 
   async getRoomsInRadius(
@@ -50,31 +56,65 @@ export class RoomService {
     return this.roomRepository.save(room);
   }
 
-  async updateRoom(modifyRoomDto: EditRoomDto, roomId: number): Promise<Room> {
-    const room = await this.getRoom(roomId);
+  async updateRoom(
+    modifyRoomDto: EditRoomDto,
+    roomId: number,
+    currentUser: Account
+  ): Promise<Room> {
+    const room = await this.roomRepository.getRoomWithOwnerAndFlat(roomId);
+
+    if (!room) {
+      throw new NotFoundException('Room not found');
+    }
 
     const { ownerEmail, ...roomModification } = modifyRoomDto;
 
-    if (ownerEmail) {
-      const user = await this.accountRepository.findOneByEmail(ownerEmail);
+    if (ownerEmail !== undefined) {
+      if (ownerEmail === null) {
+        return this.roomRepository.save({
+          ...room,
+          ...roomModification,
+          owner: null,
+        });
+      } else {
+        if (currentUser.email === ownerEmail) {
+          throw new ConflictException('You cannot add yourself to the room');
+        }
 
-      if (!user) {
-        throw new NotFoundException('User not found');
+        const user = await this.accountRepository.findOneByEmail(ownerEmail);
+
+        if (!user) {
+          throw new NotFoundException('User not found');
+        }
+
+        const currentRoomOwner = room.owner;
+
+        if (currentRoomOwner) {
+          await this.paymentService.deleteUserCharges(currentRoomOwner);
+        }
+
+        const newRoomOwner = user;
+
+        await this.paymentService.createCharge(
+          currentUser,
+          newRoomOwner,
+          room.flat,
+          room
+        );
+
+        return this.roomRepository.save({
+          ...room,
+          ...roomModification,
+          owner: newRoomOwner,
+        });
       }
-      const newRoomOwner = user;
-
-      return this.roomRepository.save({
-        ...room,
-        ...roomModification,
-        owner: newRoomOwner,
-      });
     }
 
     return this.roomRepository.save({ ...room, ...roomModification });
   }
 
   async getRoom(roomId: number): Promise<Room> {
-    const room = await this.roomRepository.findOne(roomId);
+    const room = await this.roomRepository.getRoomWithOwner(roomId);
 
     if (!room) {
       throw new NotFoundException('Room not found');
@@ -122,4 +162,6 @@ export class RoomService {
 
     await this.roomRepository.save(room);
   }
+
+  delete;
 }

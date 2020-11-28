@@ -44,9 +44,10 @@ export class RoomController {
   @ApiResponse({ type: () => Room, status: 200 })
   updateRoom(
     @Param('id', ParseIntPipe) id: number,
-    @Body() modifyRoomDto: EditRoomDto
+    @Body() modifyRoomDto: EditRoomDto,
+    @CurrentUser() currentUser: Account
   ): Promise<Room> {
-    return this.roomService.updateRoom(modifyRoomDto, id);
+    return this.roomService.updateRoom(modifyRoomDto, id, currentUser);
   }
 
   @Get(':id')

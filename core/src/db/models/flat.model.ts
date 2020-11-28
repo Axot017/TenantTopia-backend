@@ -11,6 +11,8 @@ import {
 } from 'typeorm';
 import { Account } from './account.model';
 import { Address } from './address.model';
+import { Bill } from './bill.model';
+import { Charge } from './charge.model';
 import { Room } from './room.model';
 import { Note } from './note.model';
 
@@ -47,6 +49,12 @@ export class Flat {
   @ApiProperty()
   @OneToMany(() => Note, (note) => note.flat)
   notes: Note[];
+
+  @OneToMany(() => Charge, (charge) => charge.flat)
+  charges: Charge[];
+
+  @OneToMany(() => Bill, (bill) => bill.flat)
+  bills: Bill[];
 
   @CreateDateColumn()
   createdAt: Date;

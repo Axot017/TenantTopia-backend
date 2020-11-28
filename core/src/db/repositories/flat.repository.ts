@@ -1,4 +1,4 @@
-import { DeleteResult, EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, Repository } from 'typeorm';
 import { Flat } from '../models/flat.model';
 
 @EntityRepository(Flat)
@@ -10,6 +10,35 @@ export class FlatRepository extends Repository<Flat> {
       .leftJoin('rooms.owner', 'roomOwners')
       .where('owner.id = :userId', { userId })
       .orWhere('roomOwners.id = :userId', { userId })
+      .getOne();
+  }
+
+  getUsersFlatByUserIdWithCharges(userId: number): Promise<Flat> {
+    return this.createQueryBuilder('flat')
+      .leftJoin('flat.owner', 'owner')
+      .leftJoin('flat.rooms', 'rooms')
+      .leftJoin('rooms.owner', 'roomOwners')
+      .leftJoinAndSelect('flat.charges', 'charges')
+      .where('owner.id = :userId', { userId })
+      .orWhere('roomOwners.id = :userId', { userId })
+      .getOne();
+  }
+
+  getUsersFlatByUserIdWithBills(userId: number): Promise<Flat> {
+    return this.createQueryBuilder('flat')
+      .leftJoin('flat.owner', 'owner')
+      .leftJoin('flat.rooms', 'rooms')
+      .leftJoin('rooms.owner', 'roomOwners')
+      .leftJoinAndSelect('flat.bills', 'bills')
+      .where('owner.id = :userId', { userId })
+      .orWhere('roomOwners.id = :userId', { userId })
+      .getOne();
+  }
+
+  getOwnersFlat(userId: number): Promise<Flat> {
+    return this.createQueryBuilder('flat')
+      .leftJoin('flat.owner', 'owner')
+      .where('owner.id = :userId', { userId })
       .getOne();
   }
 

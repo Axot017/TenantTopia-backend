@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Account } from './account.model';
+import { Charge } from './charge.model';
 import { Flat } from './flat.model';
 
 @Entity()
@@ -31,8 +32,21 @@ export class Room {
   description: string;
 
   @ApiProperty()
-  @Column('decimal', { nullable: true })
+  @Column('decimal', {
+    nullable: true,
+    transformer: {
+      to(value) {
+        return value;
+      },
+      from(value) {
+        return parseFloat(value);
+      },
+    },
+  })
   cost: number;
+
+  @OneToOne(() => Charge, (charge) => charge.flat)
+  charge: Charge;
 
   @ApiProperty()
   @Column('text', { array: true, nullable: true, default: '{}' })

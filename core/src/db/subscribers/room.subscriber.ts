@@ -2,7 +2,13 @@
 import { InjectConnection } from '@nestjs/typeorm';
 import { existsSync, rmSync } from 'fs';
 import { join } from 'path';
-import { Connection, EntitySubscriberInterface, RemoveEvent } from 'typeorm';
+import {
+  Connection,
+  EntitySubscriberInterface,
+  InsertEvent,
+  RemoveEvent,
+  UpdateEvent,
+} from 'typeorm';
 import { Room } from '../models/room.model';
 
 export class RoomSubscriber implements EntitySubscriberInterface<Room> {
