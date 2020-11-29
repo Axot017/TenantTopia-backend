@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   CreateDateColumn,
@@ -13,6 +14,7 @@ import { Flat } from './flat.model';
 @Entity()
 export class Bill {
   @PrimaryGeneratedColumn()
+  @ApiProperty()
   id: number;
 
   @Column('decimal', {
@@ -29,21 +31,25 @@ export class Bill {
   amount: number;
 
   @Column()
+  @ApiProperty()
   description: string;
 
-  @Column('integer', { nullable: true })
+  @Column('integer')
   payerId: number;
 
   @ManyToOne(() => Account)
   @JoinColumn({ name: 'payerId' })
+  @ApiProperty({ type: () => Account })
   payer: Account;
 
   @ManyToOne(() => Flat, (flat) => flat.bills, { onDelete: 'CASCADE' })
   flat: Flat;
 
   @CreateDateColumn()
+  @ApiProperty()
   createdAt: Date;
 
   @UpdateDateColumn()
+  @ApiProperty()
   updatedAt: Date;
 }
