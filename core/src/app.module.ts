@@ -14,12 +14,16 @@ import { Room } from './db/models/room.model';
 import { FlatModule } from './api/flat.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { Note } from './db/models/note.model';
+import { Bill } from './db/models/bill.model';
+import { Charge } from './db/models/charge.model';
+import { PaymentModule } from './api/payment.module';
 
 @Module({
   imports: [
     AccountModule,
     MicroserviceModule,
     AuthClientModule,
+    PaymentModule,
     FlatModule,
     MulterModule.register(),
     ScheduleModule.forRoot(),
@@ -30,7 +34,7 @@ import { Note } from './db/models/note.model';
       useFactory: async (configService: ConfigService) => {
         return {
           ...configService.get<TypeOrmModuleOptions>('db'),
-          entities: [Account, Flat, Room, Note],
+          entities: [Account, Flat, Room, Note, Bill, Charge],
         };
       },
     }),

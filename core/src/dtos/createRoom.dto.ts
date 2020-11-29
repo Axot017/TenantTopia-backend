@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDecimal, IsOptional, IsString } from 'class-validator';
+import { IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateRoomDto {
   @ApiProperty()
@@ -14,6 +14,6 @@ export class CreateRoomDto {
 
   @ApiProperty()
   @IsOptional()
-  @IsDecimal()
+  @IsNumber()
   cost: number;
 }

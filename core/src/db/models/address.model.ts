@@ -15,10 +15,30 @@ export class Address {
   zipCode: string;
 
   @ApiProperty()
-  @Column('decimal', { nullable: true })
+  @Column('decimal', {
+    nullable: true,
+    transformer: {
+      to(value) {
+        return value;
+      },
+      from(value) {
+        return parseFloat(value);
+      },
+    },
+  })
   lat: number;
 
   @ApiProperty()
-  @Column('decimal', { nullable: true })
+  @Column('decimal', {
+    nullable: true,
+    transformer: {
+      to(value) {
+        return value;
+      },
+      from(value) {
+        return parseFloat(value);
+      },
+    },
+  })
   lon: number;
 }

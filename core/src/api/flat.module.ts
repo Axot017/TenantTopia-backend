@@ -13,6 +13,7 @@ import { FlatSubscriber } from '../db/subscribers/flat.subscriber';
 import { NoteController } from './controllers/note.controller';
 import { NoteRepository } from '../db/repositories/note.repository';
 import { NoteService } from '../services/note.service';
+import { PaymentModule } from './payment.module';
 
 @Module({
   controllers: [
@@ -35,6 +36,7 @@ import { NoteService } from '../services/note.service';
       FlatRepository,
       NoteRepository,
     ]),
+    PaymentModule,
   ],
 })
 export class FlatModule {}

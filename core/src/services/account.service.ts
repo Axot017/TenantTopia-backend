@@ -13,7 +13,6 @@ import { AccountRepository } from '../db/repositories/account.repository';
 import { CreateAccountDto } from '../dtos/createAccount.dto';
 import { timeout } from 'rxjs/operators';
 import { EditAccountDto } from '../dtos/editAccount.dto';
-import { ConfigService } from '@nestjs/config';
 import { rmSync, existsSync } from 'fs';
 import { join } from 'path';
 
@@ -26,8 +25,7 @@ export class AccountService {
     @Inject('AUTH_MICROSERVICE_CLIENT')
     private readonly coreClient: ClientProxy,
     @InjectConnection()
-    private readonly connection: Connection,
-    private readonly configService: ConfigService
+    private readonly connection: Connection
   ) {}
 
   async createAccount(createAccountDto: CreateAccountDto): Promise<void> {

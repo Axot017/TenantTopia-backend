@@ -11,12 +11,16 @@ import { Account } from '../db/models/account.model';
 import { Flat } from '../db/models/flat.model';
 import { FlatRepository } from '../db/repositories/flat.repository';
 import { ModifyFlatDto } from '../dtos/modifyFlat.dto';
+import { PaymentService } from './payment.service';
 
 export const FLAT_IMAGES_DIR = './images/flat';
 
 @Injectable()
 export class FlatService {
-  constructor(private readonly flatRepository: FlatRepository) {}
+  constructor(
+    private readonly flatRepository: FlatRepository,
+    private readonly paymentService: PaymentService
+  ) {}
 
   async createFlat(
     currentUser: Account,
@@ -53,11 +57,10 @@ export class FlatService {
   }
 
   async deleteFlat(currentUser: Account): Promise<void> {
-    const usersFlat = await this.flatRepository.getUsersFlatByOwnerId(
-      currentUser.id
-    );
-
-    await this.flatRepository.remove(usersFlat);
+    const usersFlat = await this.flatRepository.getOwnersFlat(currentUser.id);
+    if (usersFlat) {
+      await this.flatRepository.remove(usersFlat);
+    }
   }
 
   async finalizeFlatCreation(currentUser: Account): Promise<void> {

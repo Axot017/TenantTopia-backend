@@ -17,4 +17,12 @@ export class RoomRepository extends Repository<Room> {
       .andWhere('room.isAvailable')
       .getMany();
   }
+
+  getRoomWithOwner(id: number): Promise<Room> {
+    return this.findOne(id, { relations: ['owner'] });
+  }
+
+  getRoomWithOwnerAndFlat(id: number): Promise<Room> {
+    return this.findOne(id, { relations: ['owner', 'flat'] });
+  }
 }
