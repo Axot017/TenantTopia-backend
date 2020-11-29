@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import {
   Column,
   CreateDateColumn,
@@ -15,6 +16,7 @@ import { Room } from './room.model';
 @Entity()
 export class Charge {
   @PrimaryGeneratedColumn()
+  @ApiProperty()
   id: number;
 
   @Column('decimal', {
@@ -28,20 +30,27 @@ export class Charge {
       },
     },
   })
+  @ApiProperty({
+    description:
+      'Positive if flat owner need to give back money to room owner' +
+      ' and negative if room owner need to give back money to flat owner',
+  })
   amount: number;
 
-  @Column('integer', { nullable: true })
+  @Column('integer')
   flatOwnerId: number;
 
-  @Column('integer', { nullable: true })
+  @Column('integer')
   roomOwnerId: number;
 
   @ManyToOne(() => Account)
   @JoinColumn({ name: 'flatOwnerId' })
+  @ApiProperty({ type: () => Account })
   flatOwner: Account;
 
   @ManyToOne(() => Account)
   @JoinColumn({ name: 'roomOwnerId' })
+  @ApiProperty({ type: () => Account })
   roomOwner: Account;
 
   @ManyToOne(() => Flat, { onDelete: 'CASCADE' })
@@ -52,8 +61,10 @@ export class Charge {
   room: Room;
 
   @CreateDateColumn()
+  @ApiProperty()
   createdAt: Date;
 
   @UpdateDateColumn()
+  @ApiProperty()
   updatedAt: Date;
 }
