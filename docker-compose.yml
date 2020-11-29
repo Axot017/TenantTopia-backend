@@ -27,7 +27,7 @@ services:
     build: "./auth"
     volumes:
       - ./auth:/home/node/app
-      - /home/node/app/node_modules
+      - /home/node/app/node_modules/
     depends_on:
       - db
       - rabbitmq
@@ -46,7 +46,7 @@ services:
     build: "./core"
     volumes:
       - ./core:/home/node/app
-      - /home/node/app/node_modules
+      - /home/node/app/node_modules/
     depends_on:
       - db
       - rabbitmq
@@ -65,7 +65,7 @@ services:
     build: "./messaging"
     volumes:
       - ./messaging:/home/node/app
-      - /home/node/app/node_modules
+      - /home/node/app/node_modules/
     depends_on:
       - db
       - rabbitmq

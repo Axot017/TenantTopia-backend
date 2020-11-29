@@ -26,8 +26,8 @@ steps:
       - mkdir -p ~/.ssh
       - chmod 700 ~/.ssh
       - rsync -e 'ssh -o StrictHostKeyChecking=no' -rlptgDvz --exclude=node_modules . debian@tenanttopia.pl:/home/debian/tenanttopia-backend
-      - ssh -A debian@tenanttopia.pl 'cd /home/debian/tenanttopia-backend/; docker-compose build'
-      - ssh -A debian@tenanttopia.pl 'cd /home/debian/tenanttopia-backend/; docker-compose up -d'
+      - ssh -A debian@tenanttopia.pl 'cd /home/debian/tenanttopia-backend/; docker-compose -f docker-compose.yml -f docker-compose.prod.yml build'
+      - ssh -A debian@tenanttopia.pl 'cd /home/debian/tenanttopia-backend/; docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d'
     when:
       branch:
         - master
