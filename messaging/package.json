@@ -7,7 +7,8 @@
     "watch": "tsc -w",
     "tsc": "tsc",
     "debug": "nodemon dist/index.js",
-    "start": "webpack --config webpack.config.js"
+    "start-dev": "webpack --config webpack.config.js",
+    "start": "ts-node src"
   },
   "author": "",
   "license": "ISC",

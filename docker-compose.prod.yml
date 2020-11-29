@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  auth-service:
+    command: "npm start"
+
+  core-service:
+    command: "npm start"
+
+  messaging-service:
+    command: "npm start"

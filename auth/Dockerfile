@@ -14,4 +14,4 @@ COPY src /home/node/app/src
 
 EXPOSE 3333
 
-CMD ["npm", "start"]
+CMD ["npm", "run", "start-dev"]
