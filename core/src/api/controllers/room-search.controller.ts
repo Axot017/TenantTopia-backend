@@ -14,8 +14,16 @@ export class RoomSearchController {
   getRoomsInRadius(
     @Query('lat', ParseNumberPipe) lat: number,
     @Query('long', ParseNumberPipe) long: number,
-    @Query('radius', ParseNumberPipe) radius: number
+    @Query('radius', ParseNumberPipe) radius: number,
+    @Query('minPrice') minPrice: number,
+    @Query('maxPrice') maxPrice: number
   ): Promise<Array<Room>> {
-    return this.roomService.getRoomsInRadius(lat, long, radius);
+    return this.roomService.getRoomsInRadius(
+      lat,
+      long,
+      radius,
+      minPrice,
+      maxPrice
+    );
   }
 }
