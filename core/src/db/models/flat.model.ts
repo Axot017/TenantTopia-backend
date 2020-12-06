@@ -15,6 +15,7 @@ import { Bill } from './bill.model';
 import { Charge } from './charge.model';
 import { Room } from './room.model';
 import { Note } from './note.model';
+import { Chore } from './chore.model';
 
 @Entity()
 export class Flat {
@@ -55,6 +56,9 @@ export class Flat {
 
   @OneToMany(() => Bill, (bill) => bill.flat)
   bills: Bill[];
+
+  @OneToMany(() => Chore, (chore) => chore.flat)
+  chores: Chore[];
 
   @CreateDateColumn()
   createdAt: Date;

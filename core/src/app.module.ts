@@ -17,6 +17,8 @@ import { Note } from './db/models/note.model';
 import { Bill } from './db/models/bill.model';
 import { Charge } from './db/models/charge.model';
 import { PaymentModule } from './api/payment.module';
+import { ChoreModule } from './api/chore.module';
+import { Chore } from './db/models/chore.model';
 
 @Module({
   imports: [
@@ -25,6 +27,7 @@ import { PaymentModule } from './api/payment.module';
     AuthClientModule,
     PaymentModule,
     FlatModule,
+    ChoreModule,
     MulterModule.register(),
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({ load: [configuration] }),
@@ -34,7 +37,7 @@ import { PaymentModule } from './api/payment.module';
       useFactory: async (configService: ConfigService) => {
         return {
           ...configService.get<TypeOrmModuleOptions>('db'),
-          entities: [Account, Flat, Room, Note, Bill, Charge],
+          entities: [Account, Flat, Room, Note, Bill, Charge, Chore],
         };
       },
     }),

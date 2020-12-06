@@ -12,6 +12,7 @@ import {
 import { Flat } from './flat.model';
 import { Room } from './room.model';
 import { Note } from './note.model';
+import { Chore } from './chore.model';
 
 @Entity()
 export class Account {
@@ -50,8 +51,11 @@ export class Account {
   @OneToOne(() => Room, (room) => room.owner)
   room: Room;
 
-  @OneToMany(() => Note, (note) => note.flat)
+  @OneToMany(() => Note, (note) => note.author)
   notes: Note[];
+
+  @OneToMany(() => Chore, (chore) => chore.account)
+  chores: Chore[];
 
   @CreateDateColumn()
   createdAt: Date;
