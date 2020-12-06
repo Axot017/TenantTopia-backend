@@ -28,12 +28,16 @@ export class RoomService {
   async getRoomsInRadius(
     lat: number,
     long: number,
-    radius: number
+    radius: number,
+    minPrice: number,
+    maxPrice: number
   ): Promise<Array<Room>> {
     const availableRooms = await this.roomRepository.getAvailableRoomsInRadius(
       lat,
       long,
-      radius
+      radius,
+      minPrice,
+      maxPrice
     );
 
     return availableRooms;
