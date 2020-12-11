@@ -12,6 +12,7 @@ export class RoomRepository extends Repository<Room> {
   ): Promise<Array<Room>> {
     return this.createQueryBuilder('room')
       .innerJoinAndSelect('room.flat', 'flat')
+      .innerJoinAndSelect('flat.owner', 'owner')
       .where(
         `( 6371 * acos( cos( radians(:lat) ) * cos( radians( flat.address.lat ) ) * cos ( radians(flat.address.lon) - 
         radians(:long)) + sin(radians(:lat)) * sin( radians(flat.address.lat)))) < :radius`,
