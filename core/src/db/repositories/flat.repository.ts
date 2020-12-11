@@ -5,9 +5,9 @@ import { Flat } from '../models/flat.model';
 export class FlatRepository extends Repository<Flat> {
   getUsersFlatByUserId(userId: number): Promise<Flat> {
     return this.createQueryBuilder('flat')
-      .leftJoin('flat.owner', 'owner')
+      .leftJoinAndSelect('flat.owner', 'owner')
       .leftJoinAndSelect('flat.rooms', 'rooms')
-      .leftJoin('rooms.owner', 'roomOwners')
+      .leftJoinAndSelect('rooms.owner', 'roomOwners')
       .where('owner.id = :userId', { userId })
       .orWhere('roomOwners.id = :userId', { userId })
       .getOne();
@@ -30,6 +30,7 @@ export class FlatRepository extends Repository<Flat> {
       .leftJoin('flat.rooms', 'rooms')
       .leftJoin('rooms.owner', 'roomOwners')
       .leftJoinAndSelect('flat.bills', 'bills')
+      .leftJoinAndSelect('bills.payer', 'payer')
       .where('owner.id = :userId', { userId })
       .orWhere('roomOwners.id = :userId', { userId })
       .getOne();
