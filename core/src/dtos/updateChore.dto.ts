@@ -3,6 +3,11 @@ import { IsString, IsOptional, IsBoolean, IsInt } from 'class-validator';
 
 export class UpdateChoreDto {
   @IsString()
+  @ApiProperty()
+  @IsOptional()
+  title: string;
+
+  @IsString()
   @IsOptional()
   @ApiProperty()
   description: string;
