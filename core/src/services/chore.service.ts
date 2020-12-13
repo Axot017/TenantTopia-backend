@@ -12,6 +12,7 @@ import { CreateChoreDto } from '../dtos/createChore.dto';
 import { UpdateChoreDto } from '../dtos/updateChore.dto';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { AccountRepository } from '../db/repositories/account.repository';
+import { MarkAsDoneChoreDto } from '../dtos/markAsDoneChore.dto';
 
 @Injectable()
 export class ChoreService {
@@ -64,6 +65,23 @@ export class ChoreService {
     return this.choreRepository.save({ ...chore, ...updateChoreDto });
   }
 
+  async markChoreAsDone(
+    updateChoreDto: MarkAsDoneChoreDto,
+    choreId: number,
+    currentUser: Account
+  ): Promise<Chore> {
+    const chore = await this.choreRepository.findOne({
+      where: [{ id: choreId }],
+      relations: ['account'],
+    });
+
+    if (chore.account.id != currentUser.id) {
+      throw new ForbiddenException('You are not assigned to this chore');
+    }
+
+    return this.choreRepository.save({ ...chore, ...updateChoreDto });
+  }
+
   async getChore(choreId: number): Promise<Chore> {
     const chore = await this.choreRepository.findOne(choreId, {
       relations: ['account'],
@@ -87,6 +105,7 @@ export class ChoreService {
 
     return await this.choreRepository.find({
       where: [{ flat: usersFlat.id }],
+      relations: ['account'],
     });
   }
 
@@ -96,8 +115,15 @@ export class ChoreService {
     });
   }
 
-  async deleteChore(choreId: number): Promise<void> {
-    /// TODO: add flat owner only permission
+  async deleteChore(choreId: number, currentUser: Account): Promise<void> {
+    const usersFlat = await this.flatRepository.getUsersFlatByOwnerIdWithoutRooms(
+      currentUser.id
+    );
+
+    if (!usersFlat) {
+      throw new ForbiddenException('You are not a flat owner');
+    }
+
     const chore = await this.getChore(choreId);
     await this.choreRepository.remove(chore);
   }
