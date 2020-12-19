@@ -1,5 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Flat } from '../models/flat.model';
+import { Account } from '../models/account.model';
 
 @EntityRepository(Flat)
 export class FlatRepository extends Repository<Flat> {
@@ -56,6 +57,15 @@ export class FlatRepository extends Repository<Flat> {
       .leftJoin('flat.owner', 'owner')
       .where('owner.id = :userId', { userId })
       .getOne();
+  }
+
+  getFlatWithChoresAndUsers(): Promise<Flat[]> {
+    return this.createQueryBuilder('flat')
+      .leftJoinAndSelect('flat.chores', 'chores')
+      .leftJoinAndSelect('chores.account', 'accounts')
+      .leftJoinAndSelect('flat.rooms', 'rooms')
+      .leftJoinAndSelect('rooms.owner', 'owners')
+      .getMany();
   }
 
   async deleteUnconfirmedFlats(): Promise<void> {

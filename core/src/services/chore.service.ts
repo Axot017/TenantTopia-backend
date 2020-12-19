@@ -10,9 +10,10 @@ import { FlatRepository } from '../db/repositories/flat.repository';
 import { ChoreRepository } from '../db/repositories/chore.repository';
 import { CreateChoreDto } from '../dtos/createChore.dto';
 import { UpdateChoreDto } from '../dtos/updateChore.dto';
-import { Cron, CronExpression } from '@nestjs/schedule';
+import { Cron } from '@nestjs/schedule';
 import { AccountRepository } from '../db/repositories/account.repository';
 import { MarkAsDoneChoreDto } from '../dtos/markAsDoneChore.dto';
+import { Flat } from '../db/models/flat.model';
 
 @Injectable()
 export class ChoreService {
@@ -126,5 +127,23 @@ export class ChoreService {
 
     const chore = await this.getChore(choreId);
     await this.choreRepository.remove(chore);
+  }
+
+  @Cron('59 23 * * SUN')
+  async shiftFlatChores(): Promise<void> {
+    const flats = await this.flatRepository.getFlatWithChoresAndUsers();
+    flats.forEach((flat) => {
+      const flatAccounts = flat.rooms.map((room) => room.owner);
+      flat.chores.forEach((chore) => {
+        const index = flatAccounts.findIndex(
+          (item) => item.id === chore.account.id
+        );
+
+        chore.account = flatAccounts[(index + 1) % (flatAccounts.length - 1)];
+      });
+    });
+    await this.choreRepository.save(
+      [].concat(...flats.map((flat) => flat.chores))
+    );
   }
 }
