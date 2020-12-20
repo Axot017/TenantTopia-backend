@@ -63,7 +63,21 @@ export class ChoreService {
 
     const chore = await this.getChore(choreId);
 
-    return this.choreRepository.save({ ...chore, ...updateChoreDto });
+    const updatedChore = { ...chore, ...updateChoreDto };
+
+    if (updateChoreDto['accountId']) {
+      const account = await this.accountRepository.findOne(
+        updateChoreDto.accountId
+      );
+
+      if (!account) {
+        throw new BadRequestException('User not found');
+      }
+
+      updatedChore.account = account;
+    }
+
+    return this.choreRepository.save(updatedChore);
   }
 
   async markChoreAsDone(
@@ -138,8 +152,12 @@ export class ChoreService {
         const index = flatAccounts.findIndex(
           (item) => item.id === chore.account.id
         );
-
-        chore.account = flatAccounts[(index + 1) % (flatAccounts.length - 1)];
+        if (chore.repeats) {
+          chore.account = flatAccounts[(index + 1) % (flatAccounts.length - 1)];
+          chore.done = false;
+        } else if (chore.done) {
+          this.choreRepository.delete(chore);
+        }
       });
     });
     await this.choreRepository.save(
