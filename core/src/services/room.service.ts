@@ -75,6 +75,12 @@ export class RoomService {
 
     if (ownerEmail !== undefined) {
       if (ownerEmail === null) {
+        const currentRoomOwner = room.owner;
+
+        if (currentRoomOwner) {
+          await this.paymentService.deleteUserCharges(currentRoomOwner);
+        }
+
         return this.roomRepository.save({
           ...room,
           ...roomModification,
