@@ -75,7 +75,7 @@ export class NoteService {
   }
 
   private async getFlat(currentUser: Account): Promise<Flat> {
-    const usersFlat = await this.flatRepository.getUsersFlatByOwnerIdWithoutRooms(
+    const usersFlat = await this.flatRepository.getUsersFlatByUserId(
       currentUser.id
     );
 
