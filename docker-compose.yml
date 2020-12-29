@@ -27,6 +27,7 @@ services:
     build: "./auth"
     volumes:
       - ./auth:/home/node/app
+      - staticfiles:/home/node/app/src/public
       - /home/node/app/node_modules/
     depends_on:
       - db
@@ -79,3 +80,8 @@ services:
       - core-service
     ports:
       - 8080:80
+    volumes:
+      - staticfiles:/static
+
+volumes:
+  staticfiles:
