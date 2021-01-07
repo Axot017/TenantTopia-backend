@@ -67,7 +67,7 @@ export class PaymentService {
     } else {
       charges.forEach((charge) => {
         if (charge.roomOwnerId === currentUser.id) {
-          charge.amount += amountPerRoommate;
+          charge.amount += amountPerRoommate * charges.length;
         } else {
           charge.amount -= amountPerRoommate;
         }
