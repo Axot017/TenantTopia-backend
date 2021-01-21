@@ -13,6 +13,7 @@ import { RoomRepository } from '../db/repositories/room.repository';
 import { CreateRoomDto } from '../dtos/createRoom.dto';
 import { EditRoomDto } from '../dtos/editRoom.dto';
 import { PaymentService } from './payment.service';
+import { ChoreService } from './chore.service';
 
 export const ROOM_IMAGES_DIR = './images/room';
 
@@ -22,7 +23,8 @@ export class RoomService {
     private readonly roomRepository: RoomRepository,
     private readonly flatRepository: FlatRepository,
     private readonly accountRepository: AccountRepository,
-    private readonly paymentService: PaymentService
+    private readonly paymentService: PaymentService,
+    private readonly choreService: ChoreService
   ) {}
 
   async getRoomsInRadius(
@@ -79,6 +81,10 @@ export class RoomService {
 
         if (currentRoomOwner) {
           await this.paymentService.deleteUserCharges(currentRoomOwner);
+          await this.choreService.transferUserChoresToFlatOwner(
+            currentUser,
+            currentRoomOwner
+          );
         }
 
         return this.roomRepository.save({
@@ -101,6 +107,10 @@ export class RoomService {
 
         if (currentRoomOwner) {
           await this.paymentService.deleteUserCharges(currentRoomOwner);
+          await this.choreService.transferUserChoresToFlatOwner(
+            currentUser,
+            currentRoomOwner
+          );
         }
 
         const newRoomOwner = user;

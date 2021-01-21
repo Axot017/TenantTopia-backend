@@ -14,6 +14,8 @@ import { NoteController } from './controllers/note.controller';
 import { NoteRepository } from '../db/repositories/note.repository';
 import { NoteService } from '../services/note.service';
 import { PaymentModule } from './payment.module';
+import { ChoreService } from '../services/chore.service';
+import { ChoreRepository } from '../db/repositories/chore.repository';
 
 @Module({
   controllers: [
@@ -26,6 +28,7 @@ import { PaymentModule } from './payment.module';
     FlatService,
     RoomService,
     NoteService,
+    ChoreService,
     RoomSubscriber,
     FlatSubscriber,
   ],
@@ -35,6 +38,7 @@ import { PaymentModule } from './payment.module';
       AccountRepository,
       FlatRepository,
       NoteRepository,
+      ChoreRepository,
     ]),
     PaymentModule,
   ],
