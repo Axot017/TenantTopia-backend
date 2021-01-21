@@ -143,6 +143,15 @@ export class ChoreService {
     await this.choreRepository.remove(chore);
   }
 
+  async transferUserChoresToFlatOwner(
+    owner: Account,
+    user: Account
+  ): Promise<void> {
+    const userChores = await this.getUserChores(user);
+    userChores.forEach((chore) => (chore.account = owner));
+    await this.choreRepository.save(userChores);
+  }
+
   @Cron('59 23 * * SUN')
   async shiftFlatChores(): Promise<void> {
     const flats = await this.flatRepository.getFlatWithChoresAndUsers();
